@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Breaking changes
+
+- [#2251: Update Accordion Design](https://github.com/alphagov/govuk-frontend/pull/2257)
+
 ### New features
 
 - [#2339: Add text align override classes](https://github.com/alphagov/govuk-frontend/pull/2339)
