@@ -23,11 +23,11 @@ params:
     - name: heading.text
       type: string
       required: true
-      description: The title of each section. If `heading.html` is supplied, this is ignored. This is used both as the title for each section, and as the button to open or close each section.
+      description: The title of each section. If `heading.html` is supplied, this is ignored.
     - name: heading.html
       type: string
       required: true
-      description: The HTML content of the header for each section which is used both as the title for each section, and as the button to open or close each section.
+      description: The HTML content of the header for each section which is used both as the title for each section, and as the button to open or close each section. Can only include [phrasing content](https://html.spec.whatwg.org/#phrasing-content).
     - name: summary.text
       type: string
       required: false
@@ -35,7 +35,7 @@ params:
     - name: summary.html
       type: string
       required: false
-      description: HTML content for summary line.
+      description: HTML content for summary line. The summary line is inside the HTML `<button>` element, so you can only add [phrasing content](https://html.spec.whatwg.org/#phrasing-content) to it. Keep this content simple. Do not use any non-phrasing content, as the resulting HTML will not be valid. Instead, consider simplifying your content and [reviewing the accordion guidance to confirm whether it's the right component to use](https://design-system.service.gov.uk/components/accordion/#when-not-to-use-this-component).
     - name: content.text
       type: string
       required: true
