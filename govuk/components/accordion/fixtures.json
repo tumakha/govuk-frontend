@@ -48,7 +48,7 @@
                             "text": "Test 2"
                         },
                         "summary": {
-                            "html": "<span class=\"govuk-!-font-weight-regular\">Additional description</span>"
+                            "html": "<span class=\"govuk-!-font-weight-regular\">Additional description (wrapped in span)</span>"
                         },
                         "content": {
                             "html": "<ul class=\"govuk-list govuk-list--bullet\">\n  <li>Example item 2</li>\n</ul>\n"
@@ -56,7 +56,39 @@
                     }
                 ]
             },
-            "html": "<div class=\"govuk-accordion\" data-module=\"govuk-accordion\" id=\"with-descriptions\">\n  \n    \n      <div class=\"govuk-accordion__section \">\n        <div class=\"govuk-accordion__section-header\">\n          <h2 class=\"govuk-accordion__section-heading\">\n            <span class=\"govuk-accordion__section-button\" id=\"with-descriptions-heading-1\">\n              Test\n            </span>\n          </h2>\n          \n            <div class=\"govuk-accordion__section-summary govuk-body\" id=\"with-descriptions-summary-1\">\n              Additional description\n            </div>\n          \n        </div>\n        <div id=\"with-descriptions-content-1\" class=\"govuk-accordion__section-content\" aria-labelledby=\"with-descriptions-heading-1\">\n          <ul class=\"govuk-list govuk-list--bullet\">\n  <li>Example item 1</li>\n</ul>\n\n        </div>\n      </div>\n    \n  \n    \n      <div class=\"govuk-accordion__section \">\n        <div class=\"govuk-accordion__section-header\">\n          <h2 class=\"govuk-accordion__section-heading\">\n            <span class=\"govuk-accordion__section-button\" id=\"with-descriptions-heading-2\">\n              Test 2\n            </span>\n          </h2>\n          \n            <div class=\"govuk-accordion__section-summary govuk-body\" id=\"with-descriptions-summary-2\">\n              <span class=\"govuk-!-font-weight-regular\">Additional description</span>\n            </div>\n          \n        </div>\n        <div id=\"with-descriptions-content-2\" class=\"govuk-accordion__section-content\" aria-labelledby=\"with-descriptions-heading-2\">\n          <ul class=\"govuk-list govuk-list--bullet\">\n  <li>Example item 2</li>\n</ul>\n\n        </div>\n      </div>\n    \n  \n</div>",
+            "html": "<div class=\"govuk-accordion\" data-module=\"govuk-accordion\" id=\"with-descriptions\">\n  \n    \n      <div class=\"govuk-accordion__section \">\n        <div class=\"govuk-accordion__section-header\">\n          <h2 class=\"govuk-accordion__section-heading\">\n            <span class=\"govuk-accordion__section-button\" id=\"with-descriptions-heading-1\">\n              Test\n            </span>\n          </h2>\n          \n            <div class=\"govuk-accordion__section-summary govuk-body\">\n              Additional description\n            </div>\n          \n        </div>\n        <div id=\"with-descriptions-content-1\" class=\"govuk-accordion__section-content\" aria-labelledby=\"with-descriptions-heading-1\">\n          <ul class=\"govuk-list govuk-list--bullet\">\n  <li>Example item 1</li>\n</ul>\n\n        </div>\n      </div>\n    \n  \n    \n      <div class=\"govuk-accordion__section \">\n        <div class=\"govuk-accordion__section-header\">\n          <h2 class=\"govuk-accordion__section-heading\">\n            <span class=\"govuk-accordion__section-button\" id=\"with-descriptions-heading-2\">\n              Test 2\n            </span>\n          </h2>\n          \n            <div class=\"govuk-accordion__section-summary govuk-body\">\n              <span class=\"govuk-!-font-weight-regular\">Additional description (wrapped in span)</span>\n            </div>\n          \n        </div>\n        <div id=\"with-descriptions-content-2\" class=\"govuk-accordion__section-content\" aria-labelledby=\"with-descriptions-heading-2\">\n          <ul class=\"govuk-list govuk-list--bullet\">\n  <li>Example item 2</li>\n</ul>\n\n        </div>\n      </div>\n    \n  \n</div>",
+            "hidden": false
+        },
+        {
+            "name": "with additional Content & descriptions",
+            "options": {
+                "id": "with-descriptions-and-longer-content",
+                "items": [
+                    {
+                        "heading": {
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis tortor porttitor."
+                        },
+                        "summary": {
+                            "text": "Etiam diam dui, tempus ut pharetra in, aliquet non dui. Nunc pulvinar maximus tortor, ac finibus augue congue vitae. Donec sed cursus lorem."
+                        },
+                        "content": {
+                            "html": "<ul class=\"govuk-list govuk-list--bullet\">\n  <li>Example item 1</li>\n</ul>\n"
+                        }
+                    },
+                    {
+                        "heading": {
+                            "text": "Praesent faucibus leo feugiat libero pharetra lacinia. Aliquam aliquet ante vitae mollis vestibulum."
+                        },
+                        "summary": {
+                            "html": "<span class=\"govuk-!-font-weight-regular\">Maecenas nec <abbr>est</abbr> sapien<sup>1</sup>. Etiam varius luctus mauris non porttitor. </span>"
+                        },
+                        "content": {
+                            "html": "<ul class=\"govuk-list govuk-list--bullet\">\n  <li>Example item 2</li>\n</ul>\n"
+                        }
+                    }
+                ]
+            },
+            "html": "<div class=\"govuk-accordion\" data-module=\"govuk-accordion\" id=\"with-descriptions-and-longer-content\">\n  \n    \n      <div class=\"govuk-accordion__section \">\n        <div class=\"govuk-accordion__section-header\">\n          <h2 class=\"govuk-accordion__section-heading\">\n            <span class=\"govuk-accordion__section-button\" id=\"with-descriptions-and-longer-content-heading-1\">\n              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis tortor porttitor.\n            </span>\n          </h2>\n          \n            <div class=\"govuk-accordion__section-summary govuk-body\">\n              Etiam diam dui, tempus ut pharetra in, aliquet non dui. Nunc pulvinar maximus tortor, ac finibus augue congue vitae. Donec sed cursus lorem.\n            </div>\n          \n        </div>\n        <div id=\"with-descriptions-and-longer-content-content-1\" class=\"govuk-accordion__section-content\" aria-labelledby=\"with-descriptions-and-longer-content-heading-1\">\n          <ul class=\"govuk-list govuk-list--bullet\">\n  <li>Example item 1</li>\n</ul>\n\n        </div>\n      </div>\n    \n  \n    \n      <div class=\"govuk-accordion__section \">\n        <div class=\"govuk-accordion__section-header\">\n          <h2 class=\"govuk-accordion__section-heading\">\n            <span class=\"govuk-accordion__section-button\" id=\"with-descriptions-and-longer-content-heading-2\">\n              Praesent faucibus leo feugiat libero pharetra lacinia. Aliquam aliquet ante vitae mollis vestibulum.\n            </span>\n          </h2>\n          \n            <div class=\"govuk-accordion__section-summary govuk-body\">\n              <span class=\"govuk-!-font-weight-regular\">Maecenas nec <abbr>est</abbr> sapien<sup>1</sup>. Etiam varius luctus mauris non porttitor. </span>\n            </div>\n          \n        </div>\n        <div id=\"with-descriptions-and-longer-content-content-2\" class=\"govuk-accordion__section-content\" aria-labelledby=\"with-descriptions-and-longer-content-heading-2\">\n          <ul class=\"govuk-list govuk-list--bullet\">\n  <li>Example item 2</li>\n</ul>\n\n        </div>\n      </div>\n    \n  \n</div>",
             "hidden": false
         },
         {

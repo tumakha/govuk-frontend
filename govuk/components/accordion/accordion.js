@@ -766,15 +766,19 @@ function Accordion ($module) {
   this.browserSupportsSessionStorage = helper.checkForSessionStorage();
 
   this.controlsClass = 'govuk-accordion__controls';
-  this.openAllClass = 'govuk-accordion__open-all';
-  this.iconClass = 'govuk-accordion__icon';
+  this.openAllClass = 'govuk-accordion__show-all';
+  this.openAllTextClass = 'govuk-accordion__show-all-text';
 
   this.sectionHeaderClass = 'govuk-accordion__section-header';
-  this.sectionHeaderFocusedClass = 'govuk-accordion__section-header--focused';
   this.sectionHeadingClass = 'govuk-accordion__section-heading';
+  this.sectionHeadingClassFocusWrapper = 'govuk-accordion__section-heading-focus-wrapper';
   this.sectionSummaryClass = 'govuk-accordion__section-summary';
   this.sectionButtonClass = 'govuk-accordion__section-button';
   this.sectionExpandedClass = 'govuk-accordion__section--expanded';
+  this.sectionShowHideToggleClass = 'govuk-accordion__section-toggle';
+  this.sectionShowHideTextClass = 'govuk-accordion__section-toggle-text';
+  this.upChevronIconClass = 'govuk-accordion-nav__chevron';
+  this.downChevronIconClass = 'govuk-accordion-nav__chevron--down';
 }
 
 // Initialize component
@@ -785,29 +789,36 @@ Accordion.prototype.init = function () {
   }
 
   this.initControls();
-
   this.initSectionHeaders();
 
-  // See if "Open all" button text should be updated
+  // See if "Show all sections" button text should be updated
   var areAllSectionsOpen = this.checkIfAllSectionsOpen();
   this.updateOpenAllButton(areAllSectionsOpen);
 };
 
 // Initialise controls and set attributes
 Accordion.prototype.initControls = function () {
-  // Create "Open all" button and set attributes
+  // Create "Show all" button and set attributes
   this.$openAllButton = document.createElement('button');
   this.$openAllButton.setAttribute('type', 'button');
-  this.$openAllButton.innerHTML = 'Open all <span class="govuk-visually-hidden">sections</span>';
   this.$openAllButton.setAttribute('class', this.openAllClass);
   this.$openAllButton.setAttribute('aria-expanded', 'false');
-  this.$openAllButton.setAttribute('type', 'button');
+
+  // Create icon, add to element
+  var $icon = document.createElement('span');
+  $icon.classList.add(this.upChevronIconClass);
+  this.$openAllButton.appendChild($icon);
 
   // Create control wrapper and add controls to it
-  var accordionControls = document.createElement('div');
-  accordionControls.setAttribute('class', this.controlsClass);
-  accordionControls.appendChild(this.$openAllButton);
-  this.$module.insertBefore(accordionControls, this.$module.firstChild);
+  var $accordionControls = document.createElement('div');
+  $accordionControls.setAttribute('class', this.controlsClass);
+  $accordionControls.appendChild(this.$openAllButton);
+  this.$module.insertBefore($accordionControls, this.$module.firstChild);
+
+  // Build additional wrapper for open all toggle text, place icon before wrapped text.
+  var $wrapperOpenAllText = document.createElement('span');
+  $wrapperOpenAllText.classList.add(this.openAllTextClass);
+  this.$openAllButton.appendChild($wrapperOpenAllText);
 
   // Handle events for the controls
   this.$openAllButton.addEventListener('click', this.onOpenOrCloseAllToggle.bind(this));
@@ -818,13 +829,12 @@ Accordion.prototype.initSectionHeaders = function () {
   // Loop through section headers
   nodeListForEach(this.$sections, function ($section, i) {
     // Set header attributes
-    var header = $section.querySelector('.' + this.sectionHeaderClass);
-    this.initHeaderAttributes(header, i);
-
+    var $header = $section.querySelector('.' + this.sectionHeaderClass);
+    this.initHeaderAttributes($header, i);
     this.setExpanded(this.isExpanded($section), $section);
 
     // Handle events
-    header.addEventListener('click', this.onSectionToggle.bind(this, $section));
+    $header.addEventListener('click', this.onSectionToggle.bind(this, $section));
 
     // See if there is any state stored in sessionStorage and set the sections to
     // open or closed.
@@ -834,7 +844,6 @@ Accordion.prototype.initSectionHeaders = function () {
 
 // Set individual header attributes
 Accordion.prototype.initHeaderAttributes = function ($headerWrapper, index) {
-  var $module = this;
   var $span = $headerWrapper.querySelector('.' + this.sectionButtonClass);
   var $heading = $headerWrapper.querySelector('.' + this.sectionHeadingClass);
   var $summary = $headerWrapper.querySelector('.' + this.sectionSummaryClass);
@@ -842,41 +851,71 @@ Accordion.prototype.initHeaderAttributes = function ($headerWrapper, index) {
   // Copy existing span element to an actual button element, for improved accessibility.
   var $button = document.createElement('button');
   $button.setAttribute('type', 'button');
-  $button.setAttribute('id', this.moduleId + '-heading-' + (index + 1));
   $button.setAttribute('aria-controls', this.moduleId + '-content-' + (index + 1));
+
+  // Create show / hide icons with text.
+  var $showIcons = document.createElement('span');
+  $showIcons.classList.add(this.sectionShowHideToggleClass);
+
+  // Add pause (with a comma) after heading for assistive technology.
+  // Example: [heading]Section A ,[pause] Show this section.
+  // https://accessibility.blog.gov.uk/2017/12/18/what-working-on-gov-uk-navigation-taught-us-about-accessibility/
+  var $srPause = document.createElement('span');
+  $srPause.classList.add('govuk-visually-hidden');
+  $srPause.innerHTML = ', ';
+
+  // Wrapper of heading to receive focus state design
+  // ID set to allow the heading alone to be referenced without "this section"
+  var $wrapperFocusHeading = document.createElement('span');
+  $wrapperFocusHeading.classList.add(this.sectionHeadingClassFocusWrapper);
+  $wrapperFocusHeading.setAttribute('id', this.moduleId + '-heading-' + (index + 1));
+
+  // Build additional wrapper for toggle text, place icon before wrapped text.
+  var $wrapperToggleText = document.createElement('span');
+  var $icon = document.createElement('span');
+  $icon.classList.add(this.upChevronIconClass);
+  $showIcons.appendChild($icon);
+  $wrapperToggleText.classList.add(this.sectionShowHideTextClass);
+  $showIcons.appendChild($wrapperToggleText);
 
   // Copy all attributes (https://developer.mozilla.org/en-US/docs/Web/API/Element/attributes) from $span to $button
   for (var i = 0; i < $span.attributes.length; i++) {
     var attr = $span.attributes.item(i);
-    $button.setAttribute(attr.nodeName, attr.nodeValue);
-  }
-
-  $button.addEventListener('focusin', function (e) {
-    if (!$headerWrapper.classList.contains($module.sectionHeaderFocusedClass)) {
-      $headerWrapper.className += ' ' + $module.sectionHeaderFocusedClass;
+    // Add all attributes but not ID as this is being add directly on $wrapperFocusHeading
+    if (attr.nodeName !== 'id') {
+      $button.setAttribute(attr.nodeName, attr.nodeValue);
     }
-  });
-
-  $button.addEventListener('blur', function (e) {
-    $headerWrapper.classList.remove($module.sectionHeaderFocusedClass);
-  });
-
-  if (typeof ($summary) !== 'undefined' && $summary !== null) {
-    $button.setAttribute('aria-describedby', this.moduleId + '-summary-' + (index + 1));
   }
-
-  // $span could contain HTML elements (see https://www.w3.org/TR/2011/WD-html5-20110525/content-models.html#phrasing-content)
-  $button.innerHTML = $span.innerHTML;
 
   $heading.removeChild($span);
   $heading.appendChild($button);
+  $button.appendChild($wrapperFocusHeading);
+  $button.appendChild($srPause);
+  // span could contain HTML elements (see https://www.w3.org/TR/2011/WD-html5-20110525/content-models.html#phrasing-content)
+  $wrapperFocusHeading.innerHTML = $span.innerHTML;
 
-  // Add "+/-" icon
-  var icon = document.createElement('span');
-  icon.className = this.iconClass;
-  icon.setAttribute('aria-hidden', 'true');
+  // If summary content exists add to DOM in correct order
+  if (typeof ($summary) !== 'undefined' && $summary !== null) {
+    // Create new element, in order to swap the summary from div to span as the summary element is with a button
+    var $summarySpan = document.createElement('span');
 
-  $button.appendChild(icon);
+    // Get original attributes, and pass them to the replacement
+    for (var j = 0, l = $summary.attributes.length; j < l; ++j) {
+      var nodeName = $summary.attributes.item(j).nodeName;
+      var nodeValue = $summary.attributes.item(j).nodeValue;
+      $summarySpan.setAttribute(nodeName, nodeValue);
+    }
+
+    // Persist contents
+    $summarySpan.innerHTML = $summary.innerHTML;
+
+    // Switch summary from div to span
+    $summary.parentNode.replaceChild($summarySpan, $summary);
+
+    $button.appendChild($summarySpan);
+  }
+
+  $button.appendChild($showIcons);
 };
 
 // When section toggled, set and store state
@@ -892,7 +931,6 @@ Accordion.prototype.onSectionToggle = function ($section) {
 Accordion.prototype.onOpenOrCloseAllToggle = function () {
   var $module = this;
   var $sections = this.$sections;
-
   var nowExpanded = !this.checkIfAllSectionsOpen();
 
   nodeListForEach($sections, function ($section) {
@@ -906,16 +944,30 @@ Accordion.prototype.onOpenOrCloseAllToggle = function () {
 
 // Set section attributes when opened/closed
 Accordion.prototype.setExpanded = function (expanded, $section) {
+  var $icon = $section.querySelector('.' + this.upChevronIconClass);
+  var $showHideText = $section.querySelector('.' + this.sectionShowHideTextClass);
   var $button = $section.querySelector('.' + this.sectionButtonClass);
+  var $newButtonText = expanded ? 'Hide' : 'Show';
+
+  // Build additional copy of "this section" for assistive technology and place inside toggle link
+  var $srAdditionalCopy = document.createElement('span');
+  $srAdditionalCopy.classList.add('govuk-visually-hidden');
+  $srAdditionalCopy.innerHTML = ' this section';
+
+  $showHideText.innerHTML = $newButtonText;
+  $showHideText.appendChild($srAdditionalCopy);
   $button.setAttribute('aria-expanded', expanded);
 
+  // Swap icon, change class
   if (expanded) {
     $section.classList.add(this.sectionExpandedClass);
+    $icon.classList.remove(this.downChevronIconClass);
   } else {
     $section.classList.remove(this.sectionExpandedClass);
+    $icon.classList.add(this.downChevronIconClass);
   }
 
-  // See if "Open all" button text should be updated
+  // See if "Show all sections" button text should be updated
   var areAllSectionsOpen = this.checkIfAllSectionsOpen();
   this.updateOpenAllButton(areAllSectionsOpen);
 };
@@ -936,12 +988,20 @@ Accordion.prototype.checkIfAllSectionsOpen = function () {
   return areAllSectionsOpen
 };
 
-// Update "Open all" button
+// Update "Show all sections" button
 Accordion.prototype.updateOpenAllButton = function (expanded) {
-  var newButtonText = expanded ? 'Close all' : 'Open all';
-  newButtonText += '<span class="govuk-visually-hidden"> sections</span>';
+  var $icon = this.$openAllButton.querySelector('.' + this.upChevronIconClass);
+  var $openAllCopy = this.$openAllButton.querySelector('.' + this.openAllTextClass);
+  var newButtonText = expanded ? 'Hide all sections' : 'Show all sections';
   this.$openAllButton.setAttribute('aria-expanded', expanded);
-  this.$openAllButton.innerHTML = newButtonText;
+  $openAllCopy.innerHTML = newButtonText;
+
+  // Swap icon, toggle class
+  if (expanded) {
+    $icon.classList.remove(this.downChevronIconClass);
+  } else {
+    $icon.classList.add(this.downChevronIconClass);
+  }
 };
 
 // Check for `window.sessionStorage`, and that it actually works.
@@ -965,7 +1025,7 @@ var helper = {
 // Set the state of the accordions in sessionStorage
 Accordion.prototype.storeState = function ($section) {
   if (this.browserSupportsSessionStorage) {
-    // We need a unique way of identifying each content in the accordion. Since
+    // We need a unique way of identifying each content in the Accordion. Since
     // an `#id` should be unique and an `id` is required for `aria-` attributes
     // `id` can be safely used.
     var $button = $section.querySelector('.' + this.sectionButtonClass);
