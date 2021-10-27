@@ -5,6 +5,30 @@
 ### Breaking changes
 You must make the following changes when you migrate to this release, or your service may break.
 
+#### Check your accordions still display as expected
+
+[See the new design for accordions, and read the revised guidance, particularly about when, and when not, to use accordions.](https://design-system.service.gov.uk/components/accordion/)
+
+You should check that your accordions still display as expected if you:
+
+- have applied any custom styles to your accordions
+- use accordions in non-standard ways
+- have section headings that contain unusual formatting (for example, wrappers)
+
+You do not need to make changes to the content that accordions hide or show - this release's changes do not affect it.
+
+These changes were introduced in [pull request #2257: Update accordion design](https://github.com/alphagov/govuk-frontend/pull/2257).
+
+#### Only use the accordion’s summary line for ‘phrasing content’
+
+As this change involves an edge case, we expect only a few teams will need to take action.
+
+The summary line is inside the HTML `button` element, so you can only add ['phrasing content'](https://html.spec.whatwg.org/#phrasing-content) to it. Do not use any non-phrasing content, as the resulting HTML will not be valid.
+
+[Read the accordion guidance to check whether it's the right component to use](https://design-system.service.gov.uk/components/accordion/#when-not-to-use-this-component).
+
+This change was introduced in [LINK-TO-PULL-REQUEST].
+
 #### Remove deprecated `govuk-main-wrapper` and `govuk-main-wrapper--l` mixins
 In [GOV.UK Frontend version 3.0.0](https://github.com/alphagov/govuk-frontend/releases/tag/v3.0.0), we deprecated the `govuk-main-wrapper` and `govuk-main-wrapper--l` Sass mixins.
 
